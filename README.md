@@ -1,11 +1,18 @@
 # Soal Tes Praktik — Platform Engineer Support (Entry Test)
 
-Cara Menjalankan Aplikasi:
+**Cara Menjalankan Aplikasi:**
 Prasyarat:
 
 -Docker Desktop / Docker Engine dan Docker Compose.
 
 -Python 3.9+ beserta library docker (untuk soal no 3).
+
+**Langkah Terminal:**
+1. Buka terminal pada direktori proyek ini. 
+2. Jalankan perintah berikut untuk membangun ulang image dan menjalankan semua container di latar belakang:
+   docker compose up -d --build
+3. jalankan juga perintah ini untuk menjalankan script python:
+python3 check.py
 
 ---
 
@@ -28,10 +35,13 @@ Pada soal kedua, disebut bahwa ada container yang error dengan restart loop, jad
 
 ## Soal 3 — Cek Kesesuaian Versi Deployment (Tie-in ke Traceability Tool)
 
+**Skenario:**
+ Diberikan sebuah "target version" untuk suatu service (misal dari file desired-state.json yang isinya {"service": "api-gateway", "expected_tag": "v2.3.1"}), sementara container yang aktual berjalan mungkin memakai tag lain.
+
 Pada soal no 3 kita diberikan json dengan service dan juga version/tag nya.
 Disini saya mencari image yang sesuai dengan json yang diberikan. Setelah ketemu, saya menghubungkan script dengan sistem docker local dan mengambil id dari containernya. Lalu saya mengambil hasil output dari kode yang saya tulis, memparsenya dan membandingkannya dengan data yang berada di json, dengan menggunakan if-else. lalu setelah selesai, ternyata saya bertemu error dimana ketika saya merun docker compose down dan saya docker compose up lagi, data container yang sudah diambil berubah dan docker id yang saya hardcode jadi tidak bekerja. disitu saya mengganti kode pengambilan containernya agar menjadi lebih dinamis.
 
-Juga kalau script pengecakan versi ini ingin diimplementasikan pada skala yang lebih besar, script ini perlu dibuat lebih terotomatisasi. Daripada dieksekusi manual, script ini bagusnya diintegrasikan langsung ke dalam pipeline CI/CD dan juga dijalankan terus menerus menggunakan cron job atau scheduled job. 
+Juga kalau script pengecekan versi ini ingin diimplementasikan pada skala yang lebih besar, script ini perlu dibuat lebih terotomatisasi. Daripada dieksekusi manual, script ini bagusnya diintegrasikan langsung ke dalam pipeline CI/CD dan juga dijalankan terus menerus menggunakan cron job atau scheduled job. 
 
-Terakhir, kalau script mendeteksi MISMATCH, kita bisa memakai webhook untuk langsung memberikan notifikasi ke aplikasi pembicaraan seperti contoh menggunakan bot aplikasi discord 
+Lalu, kalau script mendeteksi MISMATCH, kita bisa memakai webhook untuk langsung memberikan notifikasi ke aplikasi pembicaraan seperti contoh menggunakan bot aplikasi discord 
 

@@ -4,6 +4,7 @@ import docker
 with open('desired-state.json', 'r') as file:
     desired = json.load(file)
 
+# comment hanya untuk debug
 # print(f"Desired state: {desired}")
 
 # print (f"Expected name: {desired['expected_tag']}")

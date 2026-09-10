@@ -30,7 +30,7 @@ Modifikasi halaman frontend sederhana yang:
 Salah satu container di environment sudah di-setup agar restart loop / exit dengan kode error tertentu
 
 Pada soal kedua, disebut bahwa ada container yang error dengan restart loop, jadi saya mencari container yang statusnya restarting di docker. setelah ketemu untuk container yang bermasalah yaitu "pe-support-test-reporting-service-1", saya mengecek log dari container tersebut untuk mencari tahu masalahnya. Pada log tertulis bahwa letak masalah terjadi karena "REPORTING_DB_URL is not set" saya berasumsi bahwa berarti belum ada variabel ini pada container tersebut. setelah itu, saya memodifikasi file docker-compose.yml dan memasukkan variabel "REPORTING_DB_URL" dan mengisinya dengan data dummy yang ditemukan di file env. Setelah itu saya merun perintah docker compose down dan docker compose up lagi untuk men refresh container-container tersebut.
----
+
 
 ## Soal 3 — Cek Kesesuaian Versi Deployment (Tie-in ke Traceability Tool)
 

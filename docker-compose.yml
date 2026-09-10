@@ -113,6 +113,11 @@ services:
   # ---------------------------------------------------------------------
   reporting-service:
     image: alpine:3.20
+    # [SOAL 2]
+      # Saat mengecek log dari container reporting-service yang mengalami
+      # restart loop, saya menemukan pesan error "REPORTING_DB_URL is not set".
+      # jadi saya menambah variabel tersebut dan mengisinya menggunakan data dummy yg ditemukan di env.
+      # Jadi script validasi dari container bisa dilewati dan service dapat berjalan normal.
     environment:
       - REPORTING_DB_URL=postgres://app:changeme@postgres:5432/appdb
     command:

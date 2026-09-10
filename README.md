@@ -11,8 +11,8 @@ Prasyarat:
 1. Buka terminal pada direktori proyek ini. 
 2. Jalankan perintah berikut untuk membangun ulang image dan menjalankan semua container di latar belakang:
    docker compose up -d --build
-3. jalankan juga perintah ini untuk menjalankan script python:
-python3 check.py
+3. Jalankan juga perintah ini untuk menjalankan script python:
+    python3 check.py
 
 ---
 

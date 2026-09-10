@@ -14,8 +14,8 @@ const UNKNOWN_ENV = 'unknown';
 const BROKEN_STATES = ['restarting', 'exited', 'dead'];
 
 const statusBadgeClass = (status) => {
-  if (status.startsWith('up')) return 'st-running';
-  if (status.startsWith('restarting')) return 'st-restarting';
+  if (status === 'running') return 'st-running';
+  if (status === 'restarting') return 'st-restarting';
   if (status === 'created') return 'st-created';
   return 'st-exited';
 };
@@ -55,20 +55,22 @@ function escapeHtml(text) {
 function renderCard(c) {
   const name = (c.Names?.[0]) || c.Id;
   const cleanName = name.replace(/^\//, '');
+  const status = (c.State || 'unknown').toLowerCase();
+  const detailStatus = c.Status || 'n/a';
   const image = c.Image || 'n/a';
-  const status = (c.Status || c.State || '').toLowerCase();
   const shortId = (c.Id || '').slice(0, 12);
   const broken = BROKEN_STATES.some((s) => status.includes(s));
 
-  return `
+return `
     <div class="card ${broken ? 'broken' : ''}">
       <div class="card-head">
         <span class="name">${escapeHtml(cleanName)}</span>
-        <span class="status-badge ${statusBadgeClass(status)}">${escapeHtml(c.Status || c.State || '?')}</span>
+        <span class="status-badge ${statusBadgeClass(status)}">${escapeHtml(status.toUpperCase())}</span>
       </div>
       <div class="row"><span class="label">Image</span><span class="value">${escapeHtml(image)}</span></div>
       <div class="row"><span class="label">Container ID</span><span class="value">${escapeHtml(shortId)}</span></div>
-      <div class="row"><span class="label">Created</span><span class="value">${escapeHtml(c.CreatedAt || 'n/a')}</span></div>
+      <div class="row"><span class="label">Uptime</span><span class="value">${escapeHtml(detailStatus)}</span></div>
+      <div class="row"><span class="label">Created</span><span class="value">${escapeHtml(c.Created ? new Date(c.Created * 1000).toLocaleString('id-ID') : 'n/a')}</span></div>
     </div>
   `;
 }

@@ -1,8 +1,11 @@
 # Soal Tes Praktik — Platform Engineer Support (Entry Test)
 
-**Tools yang harus disiapkan:** akses ke Docker Engine (local/VM), Docker API (unix socket atau TCP), text editor
+Cara Menjalankan Aplikasi:
+Prasyarat:
 
-Tema soal mengacu ke konteks tool traceability yang akan dibangun (Task Management → Repository → CI/CD → Quality → Artifact Registry → Deployment status per environment).
+-Docker Desktop / Docker Engine dan Docker Compose.
+
+-Python 3.9+ beserta library docker (untuk soal no 3).
 
 ---
 
@@ -26,23 +29,11 @@ Modifikasi halaman frontend sederhana yang:
 **Skenario:**
 Salah satu container di environment sudah di-setup agar restart loop / exit dengan kode error tertentu
 
-**Tugas:**
-
-1. Deteksi container mana yang bermasalah (boleh manual `docker ps` atau lewat API `/containers/json` dengan filter status)
-2. Ambil root cause dari logs (`GET /containers/{id}/logs`) dan/atau `docker inspect` untuk exit code & error message
-3. Tuliskan diagnosis singkat: apa yang salah, dan langkah perbaikan konkret (bukan cuma "restart container")
-4. (Bonus) Perbaiki containernya sampai jalan normal
-
+Pada soal kedua, disebut bahwa ada container yang error dengan restart loop, jadi saya mencari container yang statusnya restarting di docker. setelah ketemu untuk container yang bermasalah yaitu "pe-support-test-reporting-service-1", saya mengecek log dari container tersebut untuk mencari tahu masalahnya. Pada log tertulis bahwa letak masalah terjadi karena "REPORTING_DB_URL is not set" saya berasumsi bahwa berarti belum ada variabel ini pada container tersebut. setelah itu, saya memodifikasi file docker-compose.yml dan memasukkan variabel "REPORTING_DB_URL" dan mengisinya dengan data dummy yang ditemukan di file env. Setelah itu saya merun perintah docker compose down dan docker compose up lagi untuk men refresh container-container tersebut.
 ---
 
 ## Soal 3 — Cek Kesesuaian Versi Deployment (Tie-in ke Traceability Tool)
 
-**Skenario:**
-Diberikan sebuah "target version" untuk suatu service (misal dari file `desired-state.json` yang isinya `{"service": "api-gateway", "expected_tag": "v2.3.1"}`), sementara container yang aktual berjalan mungkin memakai tag lain.
+Pada soal no 3 kita diberikan json dengan service dan juga version/tag nya.
+Disini saya mencari image yang sesuai dengan json yang diberikan. Setelah ketemu, saya menghubungkan script dengan sistem docker local dan mengambil id dari containernya. Lalu saya mengambil hasil output dari kode yang saya tulis, memparsenya dan membandingkannya dengan data yang berada di json, dengan menggunakan if-else. lalu setelah selesai, ternyata saya bertemu error dimana ketika saya merun docker compose down dan saya docker compose up lagi, data container yang sudah diambil berubah dan docker id yang saya hardcode jadi tidak bekerja. disitu saya mengganti kode pengambilan containernya agar menjadi lebih dinamis.
 
-**Tugas:**
-
-1. Ambil image tag yang sedang berjalan untuk service tersebut lewat Docker API
-2. Bandingkan dengan `expected_tag` di file
-3. Tampilkan status kecocokan: MATCH / MISMATCH / SERVICE NOT RUNNING
-4. Jelaskan singkat (di komentar kode atau catatan terpisah): kalau ini harus dikembangkan jadi tool yang mengecek versi di banyak environment sekaligus, bagian mana yang perlu diubah pendekatannya (misal: dari cek manual jadi scheduled job)
